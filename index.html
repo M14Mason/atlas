@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ATLAS · Your personal AI command center</title>
+<meta name="description" content="ATLAS: a free AI command center for Mac and Windows. Build AIs from a sentence, evolve trading bots on real data, run an AI workforce. Runs on your computer. No API keys needed.">
+<meta property="og:title" content="ATLAS · Your personal AI command center">
+<meta property="og:description" content="Build AIs from a sentence, evolve 500 trading bots, run an AI team. Free, local, Mac + Windows.">
+<meta property="og:image" content="assets/command.webp">
+<meta name="theme-color" content="#05070d">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<style>
+:root{--bg:#05070d;--bg2:#0a0e1a;--panel:#0d1322;--line:rgba(120,150,220,.12);--line2:rgba(120,150,220,.22);--text:#eef3ff;--dim:#93a0bb;--faint:#5d6984;
+  --cyan:#3ee0ff;--violet:#a27bff;--blue:#5b6dff;--green:#3ddc97;--amber:#ffbe3d;--pink:#ff6bd5;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1200px;margin:0 auto;padding:0 28px}
+/* ---------- nav ---------- */
+nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:20;width:min(1120px,calc(100% - 28px));border-radius:16px;
+  background:rgba(10,14,26,.6);backdrop-filter:blur(18px) saturate(1.4);border:1px solid var(--line2);box-shadow:0 10px 40px rgba(0,0,0,.35)}
+nav .in{display:flex;align-items:center;gap:26px;height:58px;padding:0 10px 0 18px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.26em;font-size:14px}
+.logo img{width:26px;height:26px}
+nav .links{display:flex;gap:26px;margin-left:auto;font-size:14px;color:var(--dim)}
+nav .links a:hover{color:var(--text)}
+.btn{position:relative;display:inline-flex;align-items:center;gap:10px;padding:13px 22px;border-radius:13px;border:1px solid var(--line2);
+  background:rgba(13,19,34,.7);font-weight:650;font-size:15px;cursor:pointer;color:var(--text);transition:transform .2s,box-shadow .2s,border-color .2s;white-space:nowrap}
+.btn:hover{border-color:rgba(62,224,255,.6);transform:translateY(-2px)}
+.btn.primary{background:linear-gradient(135deg,#5ff0ff,#3ee0ff 30%,#6a7bff);color:#041019;border:0;box-shadow:0 12px 40px rgba(62,224,255,.35),inset 0 1px 0 rgba(255,255,255,.5)}
+.btn.primary:hover{box-shadow:0 18px 60px rgba(62,224,255,.5),inset 0 1px 0 rgba(255,255,255,.5)}
+.btn.sm{padding:9px 16px;font-size:13.5px;border-radius:11px}
+.btn svg{width:18px;height:18px}
+/* ---------- hero ---------- */
+.hero{position:relative;min-height:100vh;padding:130px 0 0;overflow:hidden}
+.aurora{position:absolute;inset:-20% -10% auto;height:120%;z-index:0;filter:blur(70px);opacity:.75;pointer-events:none}
+.aurora i{position:absolute;border-radius:50%;mix-blend-mode:screen;animation:drift 18s ease-in-out infinite alternate}
+.aurora i:nth-child(1){width:620px;height:620px;left:5%;top:0;background:radial-gradient(circle,rgba(62,224,255,.45),transparent 65%)}
+.aurora i:nth-child(2){width:700px;height:700px;right:0;top:-10%;background:radial-gradient(circle,rgba(162,123,255,.45),transparent 65%);animation-duration:22s}
+.aurora i:nth-child(3){width:520px;height:520px;left:38%;top:30%;background:radial-gradient(circle,rgba(255,107,213,.28),transparent 65%);animation-duration:26s}
+@keyframes drift{to{transform:translate(60px,40px) scale(1.12)}}
+.gridfloor{position:absolute;left:-50%;right:-50%;bottom:-10%;height:60%;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(62,224,255,.14) 1px,transparent 1px),linear-gradient(90deg,rgba(62,224,255,.14) 1px,transparent 1px);background-size:60px 60px;
+  transform:perspective(600px) rotateX(62deg);mask-image:linear-gradient(to top,#000 10%,transparent 75%);-webkit-mask-image:linear-gradient(to top,#000 10%,transparent 75%)}
+.hero .wrap{position:relative;z-index:2}
+.split{display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:30px}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;padding:6px 6px 6px 14px;border:1px solid var(--line2);border-radius:99px;font-size:13px;color:var(--dim);background:rgba(10,14,26,.55);backdrop-filter:blur(8px)}
+.eyebrow .new{padding:3px 10px;border-radius:99px;background:linear-gradient(135deg,rgba(62,224,255,.2),rgba(162,123,255,.2));color:var(--text);font-weight:600;font-size:12px}
+.eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.35}}
+h1{font-size:clamp(46px,6.6vw,92px);line-height:.98;letter-spacing:-.045em;margin:24px 0 22px;font-weight:820}
+h1 .grad{background:linear-gradient(95deg,#7cf3ff,var(--cyan) 20%,var(--violet) 60%,var(--pink));background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 8s linear infinite}
+@keyframes shine{to{background-position:200% center}}
+.lead{font-size:clamp(17px,1.6vw,20px);color:var(--dim);max-width:560px;margin:0 0 34px}
+.lead b{color:var(--text);font-weight:600}
+.cta{display:flex;gap:12px;flex-wrap:wrap}
+.meta{margin-top:18px;font-size:13px;color:var(--faint)}
+.meta a{text-decoration:underline}
+.trust{display:flex;gap:22px;margin-top:34px;flex-wrap:wrap}
+.trust div{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--dim)}
+.trust svg{width:16px;height:16px;stroke:var(--green)}
+#core{width:100%;aspect-ratio:1/1;max-width:560px;margin-left:auto;display:block}
+.core-wrap{position:relative}
+.core-label{position:absolute;font:600 11px var(--mono);letter-spacing:.12em;color:var(--dim);padding:6px 10px;border-radius:9px;background:rgba(10,14,26,.7);border:1px solid var(--line2);backdrop-filter:blur(6px);animation:bob 6s ease-in-out infinite}
+.core-label b{color:var(--cyan)}
+@keyframes bob{50%{transform:translateY(-8px)}}
+/* product frame + floating cards */
+.stage{position:relative;margin:70px auto 0;max-width:1120px;padding-bottom:40px}
+.frame{border-radius:20px;padding:1px;background:linear-gradient(160deg,rgba(62,224,255,.6),rgba(162,123,255,.25) 35%,rgba(120,150,220,.12) 70%,rgba(255,107,213,.35));
+  box-shadow:0 50px 140px rgba(0,0,0,.7),0 0 120px rgba(62,224,255,.15)}
+.frame>div{border-radius:19px;overflow:hidden;background:#05070d}
+.frame .bar{height:36px;display:flex;align-items:center;gap:7px;padding:0 14px;background:#0a0e1a;border-bottom:1px solid var(--line)}
+.frame .bar i{width:11px;height:11px;border-radius:50%}
+.frame .bar i:nth-child(1){background:#ff5f57}.frame .bar i:nth-child(2){background:#febc2e}.frame .bar i:nth-child(3){background:#28c840}
+.frame .bar span{margin:0 auto;font:12px var(--mono);color:var(--faint)}
+.frame img{display:block;width:100%;height:auto}
+.float{position:absolute;z-index:3;display:flex;gap:12px;align-items:center;padding:12px 16px;border-radius:14px;font-size:13px;
+  background:rgba(13,19,34,.78);backdrop-filter:blur(14px);border:1px solid var(--line2);box-shadow:0 20px 50px rgba(0,0,0,.5);animation:bob 7s ease-in-out infinite}
+.float .ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:16px}
+.float b{display:block;font-size:13.5px}.float span{color:var(--dim);font-size:12px}
+.f1{left:-46px;top:16%}.f1 .ic{background:rgba(61,220,151,.15);color:var(--green)}
+.f2{right:-40px;top:34%;animation-delay:-2s}.f2 .ic{background:rgba(255,190,61,.15);color:var(--amber)}
+.f3{left:6%;bottom:-6px;animation-delay:-4s}.f3 .ic{background:rgba(162,123,255,.18);color:var(--violet)}
+/* marquee */
+.marquee{overflow:hidden;border-block:1px solid var(--line);padding:18px 0;margin-top:30px;mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.marquee .track{display:flex;gap:48px;width:max-content;animation:scroll 40s linear infinite}
+.marquee span{font:600 14px var(--mono);color:var(--faint);letter-spacing:.08em;white-space:nowrap}
+.marquee span b{color:var(--cyan);margin-right:10px}
+@keyframes scroll{to{transform:translateX(-50%)}}
+/* sections */
+section{padding:110px 0;position:relative}
+.kicker{display:inline-block;font:600 12px var(--mono);letter-spacing:.22em;color:var(--cyan);text-transform:uppercase;padding:5px 12px;border:1px solid rgba(62,224,255,.25);border-radius:99px;background:rgba(62,224,255,.06)}
+h2{font-size:clamp(34px,4.6vw,58px);letter-spacing:-.035em;margin:18px 0 16px;line-height:1.02;font-weight:780}
+h2 .grad{background:linear-gradient(95deg,var(--cyan),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--dim);max-width:640px;margin:0 0 50px;font-size:18px}
+.center{text-align:center}.center .sub{margin-left:auto;margin-right:auto}
+/* bento */
+.bento{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:minmax(250px,auto);gap:16px}
+.tile{position:relative;overflow:hidden;border-radius:20px;padding:26px;background:linear-gradient(180deg,rgba(16,23,40,.9),rgba(9,13,24,.95));border:1px solid var(--line);transition:border-color .3s,transform .3s}
+.tile:hover{border-color:var(--line2);transform:translateY(-4px)}
+.tile:before{content:"";position:absolute;inset:0;background:radial-gradient(600px circle at var(--mx,50%) var(--my,0%),rgba(62,224,255,.09),transparent 40%);pointer-events:none}
+.tile h3{margin:0 0 8px;font-size:21px;letter-spacing:-.01em}.tile p{margin:0;color:var(--dim);font-size:15px;max-width:440px}
+.tile .tag{font:600 11px var(--mono);letter-spacing:.14em;color:var(--faint);text-transform:uppercase;margin-bottom:12px;display:block}
+.t-arch{grid-column:span 4}.t-mkt{grid-column:span 2;grid-row:span 2}.t-council{grid-column:span 2}.t-work{grid-column:span 2}
+.t-free{grid-column:span 2}.t-chat{grid-column:span 2}.t-lab{grid-column:span 2}nav .btn{margin-left:auto}nav .links+.btn{margin-left:0}
+.viz{margin-top:22px}
+.stages{display:flex;gap:6px;flex-wrap:wrap}
+.stages span{flex:1;min-width:70px;text-align:center;font:600 10.5px var(--mono);letter-spacing:.06em;padding:9px 4px;border-radius:9px;border:1px solid var(--line2);color:var(--faint)}
+.stages span.d{color:var(--green);border-color:rgba(61,220,151,.35);background:rgba(61,220,151,.06)}
+.stages span.a{color:var(--cyan);border-color:var(--cyan);box-shadow:0 0 20px rgba(62,224,255,.3);animation:pulse 1.6s infinite}
+.result{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap}
+.result div{padding:10px 14px;border-radius:11px;background:rgba(5,7,13,.6);border:1px solid var(--line);font:12px var(--mono);color:var(--dim)}
+.result b{color:var(--green);font-size:15px;display:block;font-family:Inter,sans-serif}
+.votes .v{margin:10px 0}.votes .row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--dim);margin-bottom:5px}
+.votes .bar{height:7px;border-radius:9px;background:rgba(120,150,220,.12);overflow:hidden}.votes .bar i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,var(--cyan),var(--violet))}
+.big{font-size:64px;font-weight:820;letter-spacing:-.05em;line-height:1;background:linear-gradient(135deg,#fff,var(--green));-webkit-background-clip:text;background-clip:text;color:transparent}
+.chatv .m{padding:10px 13px;border-radius:12px;font-size:13px;margin-bottom:8px;max-width:88%}
+.chatv .u{margin-left:auto;background:linear-gradient(135deg,rgba(62,224,255,.15),rgba(91,109,255,.15));border:1px solid rgba(62,224,255,.25)}
+.chatv .a{background:rgba(5,7,13,.6);border:1px solid var(--line);color:var(--dim)}
+.chatv .src{display:inline-block;font:11px var(--mono);border:1px solid var(--line2);border-radius:99px;padding:1px 8px;margin:6px 4px 0 0;color:var(--cyan)}
+/* steps */
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;counter-reset:h}
+.how div{padding:28px;border-radius:20px;border:1px solid var(--line);background:rgba(10,14,26,.6);position:relative}
+.how div:before{counter-increment:h;content:"0" counter(h);font:700 13px var(--mono);color:var(--cyan);display:block;margin-bottom:16px}
+.how h3{margin:0 0 8px;font-size:20px}.how p{margin:0;color:var(--dim);font-size:15px}
+/* gallery */
+.gal-tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:28px}
+.gal-tabs button{border:1px solid var(--line2);background:rgba(13,19,34,.7);color:var(--dim);padding:10px 18px;border-radius:99px;cursor:pointer;font:600 14px Inter,sans-serif;transition:.2s}
+.gal-tabs button:hover{color:var(--text)}
+.gal-tabs button.on{color:#041019;background:linear-gradient(135deg,#5ff0ff,#6a7bff);border-color:transparent;box-shadow:0 8px 30px rgba(62,224,255,.3)}
+.gal-cap{text-align:center;color:var(--dim);margin:22px auto 0;min-height:52px;max-width:760px}
+#galImg{transition:opacity .25s}
+/* download */
+.dl-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:18px}
+.card{background:linear-gradient(180deg,rgba(16,23,40,.92),rgba(9,13,24,.95));border:1px solid var(--line);border-radius:20px;padding:26px;position:relative;min-width:0}
+.dl{display:flex;flex-direction:column;gap:14px;transition:transform .25s,border-color .25s}
+.dl:hover{transform:translateY(-4px);border-color:var(--line2)}
+.dl.rec{border-color:transparent;background:linear-gradient(180deg,rgba(16,23,40,.96),rgba(9,13,24,.98)) padding-box,linear-gradient(160deg,var(--cyan),var(--violet),rgba(120,150,220,.2)) border-box;border:1px solid transparent;box-shadow:0 30px 80px rgba(62,224,255,.14)}
+.dl .rectag{position:absolute;top:-12px;left:22px;font:700 10.5px var(--mono);letter-spacing:.1em;background:linear-gradient(135deg,#5ff0ff,#6a7bff);color:#041019;padding:4px 11px;border-radius:99px}
+.dl .os{display:flex;align-items:center;gap:14px}
+.dl .os svg{width:38px;height:38px}
+.dl h3{margin:0;font-size:21px}
+.dl .spec{font-size:13.5px;color:var(--dim);line-height:1.75}
+.dl .btn{justify-content:center;margin-top:auto}
+.hash{display:flex;gap:8px;font:11px var(--mono);color:var(--faint);background:#05070d;border:1px solid var(--line);border-radius:9px;padding:7px 9px;cursor:pointer;overflow:hidden}
+.hash span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hash:hover{color:var(--dim);border-color:var(--line2)}
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.stat{padding:18px 20px;border-radius:16px;background:rgba(10,14,26,.6);border:1px solid var(--line)}
+.stat .v{font-size:30px;font-weight:800;letter-spacing:-.03em}.stat .l{font-size:12.5px;color:var(--faint)}
+.dash{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:16px}
+.tabs{display:flex;gap:4px;margin-bottom:20px;background:#05070d;border:1px solid var(--line);padding:4px;border-radius:12px;width:max-content;max-width:100%}
+.tabs button{border:0;background:none;color:var(--dim);padding:8px 16px;border-radius:9px;cursor:pointer;font:600 14px Inter,sans-serif}
+.tabs button.on{background:var(--panel);color:var(--text);box-shadow:0 0 0 1px var(--line2)}
+ol.steps{list-style:none;padding:0;margin:0;counter-reset:s}
+ol.steps li{counter-increment:s;position:relative;padding:0 0 18px 48px;color:var(--dim)}
+ol.steps li b{color:var(--text)}
+ol.steps li:before{content:counter(s);position:absolute;left:0;top:-2px;width:32px;height:32px;border-radius:10px;display:grid;place-items:center;font:700 13px var(--mono);color:var(--cyan);background:rgba(62,224,255,.08);border:1px solid rgba(62,224,255,.3)}
+.warn{font-size:13px;color:#ffd99a;background:rgba(255,190,61,.07);border:1px solid rgba(255,190,61,.22);border-radius:11px;padding:11px 13px;margin-top:4px}
+code{font:13px var(--mono);background:#05070d;border:1px solid var(--line);border-radius:6px;padding:1px 6px;color:var(--cyan)}
+.notes{padding-left:18px}.notes li{color:var(--dim);margin:7px 0;font-size:14.5px}.notes li::marker{color:var(--cyan)}
+.free{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.free div{padding:16px;border-radius:14px;background:rgba(5,7,13,.6);border:1px solid var(--line);font-size:14px;color:var(--dim)}
+.free div b{display:block;color:var(--text);margin-bottom:4px}
+/* final cta */
+.final{margin:0 auto;max-width:1120px;border-radius:28px;padding:80px 40px;text-align:center;position:relative;overflow:hidden;
+  background:radial-gradient(800px 400px at 50% 0%,rgba(62,224,255,.22),transparent 60%),radial-gradient(600px 400px at 90% 100%,rgba(162,123,255,.22),transparent 60%),#0a0e1a;border:1px solid var(--line2)}
+.final h2{margin-top:0}
+details{border-bottom:1px solid var(--line);padding:20px 0}
+summary{cursor:pointer;font-weight:600;font-size:17px;list-style:none;display:flex;justify-content:space-between;gap:20px}
+summary::-webkit-details-marker{display:none}
+summary:after{content:"+";color:var(--cyan);font-size:22px;line-height:1;transition:transform .2s}
+details[open] summary:after{transform:rotate(45deg)}
+details p{color:var(--dim);margin:12px 0 0}
+footer{border-top:1px solid var(--line);padding:40px 0;color:var(--faint);font-size:14px;margin-top:80px}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--panel);border:1px solid var(--line2);padding:10px 18px;border-radius:12px;font-size:14px;z-index:50}
+@media(max-width:1020px){.split{grid-template-columns:1fr}#core{max-width:420px;margin:0 auto}.f1,.f2{display:none}.bento{grid-template-columns:1fr 1fr}
+  .t-arch,.t-mkt,.t-council,.t-work,.t-free,.t-chat,.t-lab{grid-column:span 2;grid-row:auto}.dash{grid-template-columns:minmax(0,1fr)}.dl-grid{grid-template-columns:minmax(0,1fr)}
+  .how{grid-template-columns:1fr}.stat-row{grid-template-columns:1fr 1fr}.free{grid-template-columns:1fr}nav .links{display:none}}
+@media(max-width:1020px){nav .btn{margin-left:auto!important}}@media(max-width:620px){.hero{padding-top:100px}.f3{display:none}.final{padding:56px 22px}.bento{grid-template-columns:1fr}.t-arch,.t-mkt,.t-council,.t-work,.t-free,.t-chat,.t-lab{grid-column:span 1}.trust{gap:12px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<nav><div class="in">
+  <a class="logo" href="#"><img src="assets/icon.svg" alt="">ATLAS</a>
+  <div class="links"><a href="#features">Features</a><a href="#how">How it works</a><a href="#gallery">Tour</a><a href="#download">Download</a><a href="#faq">FAQ</a></div>
+  <a class="btn sm primary" href="#download">Download free</a>
+</div></nav>
+
+<header class="hero">
+  <div class="aurora"><i></i><i></i><i></i></div>
+  <div class="gridfloor"></div>
+  <div class="wrap">
+    <div class="split">
+      <div>
+        <span class="eyebrow"><span class="dot"></span><span id="verTxt">v0.2.0</span> is out <span class="new">Mac + Windows</span></span>
+        <h1>Your personal<br><span class="grad">AI command center.</span></h1>
+        <p class="lead"><b>Build working AIs from one sentence.</b> Evolve 500 trading bots on real market data. Run a team of AI agents that delegate, check each other's work and get cheaper over time. All on your own computer.</p>
+        <div class="cta">
+          <a class="btn primary" id="heroDl" href="#download"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg><span>Download ATLAS</span></a>
+          <a class="btn" href="#gallery"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Take the tour</a>
+        </div>
+        <div class="meta" id="heroMeta">Free · No account · No API keys needed</div>
+        <div class="trust">
+          <div><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M4 12l5 5L20 6"/></svg>$0 with local AI</div>
+          <div><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M4 12l5 5L20 6"/></svg>Your data stays on your Mac/PC</div>
+          <div><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M4 12l5 5L20 6"/></svg>Hard spending caps</div>
+        </div>
+      </div>
+      <div class="core-wrap">
+        <canvas id="core"></canvas>
+        <div class="core-label" style="left:2%;top:18%">AGENTS <b>8</b></div>
+        <div class="core-label" style="right:4%;top:10%;animation-delay:-2s">COUNCIL <b>LIVE</b></div>
+        <div class="core-label" style="right:0;bottom:22%;animation-delay:-4s">BOTS <b>500</b></div>
+      </div>
+    </div>
+    <div class="stage reveal">
+      <div class="float f1"><div class="ic">✓</div><div><b>Spam detector deployed</b><span>test 0.69 vs baseline 0.38</span></div></div>
+      <div class="float f2"><div class="ic">🧬</div><div><b>Generation 47</b><span>out-of-sample +5.6%</span></div></div>
+      <div class="float f3"><div class="ic">⛬</div><div><b>Lead → Research Agent</b><span>delegated · peer review on</span></div></div>
+      <div class="frame"><div><div class="bar"><i></i><i></i><i></i><span>ATLAS · Command Center</span></div><img src="assets/command.webp" alt="ATLAS Command Center" width="1440" height="900"></div></div>
+    </div>
+  </div>
+  <div class="marquee"><div class="track" id="marq"></div></div>
+</header>
+
+<section id="features"><div class="wrap">
+  <div class="center reveal"><span class="kicker">What it does</span><h2>A whole AI lab.<br><span class="grad">In one app.</span></h2>
+  <p class="sub">Every animation in ATLAS is driven by real activity. When an agent delegates, a model trains or a bot evolves, you watch it happen.</p></div>
+  <div class="bento">
+    <div class="tile t-arch reveal"><span class="tag">AI Architect</span><h3>Describe an AI. Get a working one.</h3>
+      <p>It researches, designs, trains several real networks, tests them on data they never saw and only ships if they beat a baseline.</p>
+      <div class="viz"><div class="stages"><span class="d">understand</span><span class="d">research</span><span class="d">design</span><span class="d">train</span><span class="a">test</span><span>package</span><span>deploy</span></div>
+      <div class="result"><div><b>0.69</b>held-out accuracy</div><div><b style="color:var(--dim)">0.38</b>naive baseline</div><div><b>PASS</b>packaged as .zip</div></div></div></div>
+    <div class="tile t-mkt reveal"><span class="tag">Market Lab</span><h3>500 bots. Real markets. Natural selection.</h3>
+      <p>Strategies evolve on real price history with trading costs. The weak die, the strong breed. Click any creature to see its DNA and family tree.</p>
+      <div class="viz"><canvas id="mktviz" style="width:100%;height:230px"></canvas></div>
+      <p style="font-size:13px;margin-top:12px">Virtual money only. Out-of-sample results are always shown.</p></div>
+    <div class="tile t-council reveal"><span class="tag">AI Council</span><h3>Models debate, then vote.</h3>
+      <p>Votes are weighted by each model's measured accuracy.</p>
+      <div class="viz votes"><div class="v"><div class="row"><span>qwen2.5</span><span>0.82</span></div><div class="bar"><i style="width:82%"></i></div></div>
+      <div class="v"><div class="row"><span>llama3.2</span><span>0.61</span></div><div class="bar"><i style="width:61%"></i></div></div>
+      <div class="v"><div class="row"><span>gemma3</span><span>0.47</span></div><div class="bar"><i style="width:47%"></i></div></div></div></div>
+    <div class="tile t-work reveal"><span class="tag">AI Workforce</span><h3>A team that hires itself.</h3>
+      <p>Leads create specialist agents on probation. They earn trust by passing tests.</p>
+      <div class="viz"><svg viewBox="0 0 300 110" style="width:100%"><g stroke="rgba(91,140,255,.5)" fill="none"><path d="M150 22 C150 50 60 40 60 72"/><path d="M150 22 V72"/><path d="M150 22 C150 50 240 40 240 72"/></g>
+        <circle cx="150" cy="18" r="11" fill="#5b8cff"/><circle cx="60" cy="78" r="8" fill="#3ee0ff"/><circle cx="150" cy="78" r="8" fill="#ffbe3d"/><circle cx="240" cy="78" r="8" fill="#ff6bd5" opacity=".6"/>
+        <circle cx="240" cy="78" r="12" fill="none" stroke="#ffbe3d" stroke-dasharray="3 3"/><text x="150" y="104" fill="#5d6984" font-size="10" text-anchor="middle" font-family="monospace">research · math · verify (probation)</text></svg></div></div>
+    <div class="tile t-free reveal"><span class="tag">Cost</span><div class="big">$0</div><h3 style="margin-top:10px">Free with local AI.</h3><p>Runs free models on your computer. Paid APIs are optional and hard-capped.</p></div>
+    <div class="tile t-chat reveal"><span class="tag">Ask ATLAS</span><h3>Answers with receipts.</h3><p>Chat grounded in your own notes and live web pages, with numbered sources.</p>
+      <div class="viz chatv"><div class="m u">What caused the 2008 financial crisis?</div>
+      <div class="m a">Subprime mortgage defaults spread through the banking system, and Lehman Brothers' collapse froze credit markets…<br><span class="src">K1 Market crash notes</span><span class="src">W1 IRLE · Berkeley</span></div></div></div>
+    <div class="tile t-lab reveal"><span class="tag">Research Lab + Ground-Up AI</span><h3>Learn how AI actually works.</h3><p>Build neural networks layer by layer, watch their decision boundaries form, and run controlled experiments that tell you whether a result is real or noise.</p>
+      <div class="viz"><canvas id="labviz" style="width:100%;height:150px"></canvas></div></div>
+  </div>
+</div></section>
+
+<section id="how" style="padding-top:20px"><div class="wrap">
+  <div class="center reveal"><span class="kicker">How it works</span><h2>Running in three minutes.</h2></div>
+  <div class="how reveal">
+    <div><h3>Download and open</h3><p>One file for Mac or Windows. No account. Windows includes everything; Mac sets itself up on first launch.</p></div>
+    <div><h3>Add free AI (optional)</h3><p>Install Ollama, then click Download next to a model inside ATLAS. The setup wizard walks you through it.</p></div>
+    <div><h3>Build something</h3><p>Describe an AI, start an evolution or give your agents a task, then watch it happen live.</p></div>
+  </div>
+</div></section>
+
+<section id="gallery" style="padding-top:40px"><div class="wrap">
+  <div class="center reveal"><span class="kicker">Tour</span><h2>See it working.</h2><p class="sub">Real screenshots from ATLAS v0.3.</p></div>
+  <div class="gal-tabs" id="galTabs"></div>
+  <div class="frame reveal"><div><div class="bar"><i></i><i></i><i></i><span id="galTitle">ATLAS</span></div><img id="galImg" src="assets/architect.webp" alt="" width="1440" height="900"></div></div>
+  <p class="gal-cap" id="galCap"></p>
+</div></section>
+
+<section id="download"><div class="wrap">
+  <div class="center reveal"><span class="kicker">Download dashboard</span><h2>Get ATLAS.</h2><p class="sub">Pick your computer. Everything runs locally and your data stays on your machine.</p></div>
+  <div class="stat-row reveal" id="stats"></div>
+  <div class="dl-grid" id="dlGrid"></div>
+  <div class="dash">
+    <div class="card reveal"><div class="tabs" id="osTabs"><button data-os="mac">Mac</button><button data-os="windows">Windows</button><button data-os="source">From source</button></div><div id="steps"></div></div>
+    <div class="card reveal"><span class="kicker" style="margin-bottom:12px">Release notes</span><h3 style="margin:14px 0 6px" id="relTitle">v0.2.0</h3><ul class="notes" id="notes"></ul></div>
+  </div>
+  <div class="card reveal" style="margin-top:16px">
+    <span class="kicker">Make it 100% free</span>
+    <h3 style="margin:14px 0 6px;font-size:22px">No API keys. No subscriptions.</h3>
+    <p style="color:var(--dim);margin:0 0 18px">ATLAS runs AI models on your own computer through Ollama. Install it once, then download models with one click in ATLAS Settings.</p>
+    <div class="free">
+      <div><b>1 · Install Ollama</b>Free from <a href="https://ollama.com/download" style="color:var(--cyan)">ollama.com/download</a>. Open it once.</div>
+      <div><b>2 · Download models</b>In ATLAS Settings: <code>llama3.2</code> (2 GB) and <code>qwen2.5</code> (4.7 GB).</div>
+      <div><b>3 · Done</b>Council, agents and chat run free. 16 GB RAM recommended for 7B models.</div>
+    </div>
+  </div>
+</div></section>
+
+<section id="faq" style="padding-top:20px"><div class="wrap" style="max-width:860px">
+  <div class="center reveal"><span class="kicker">FAQ</span><h2>Questions.</h2></div>
+  <details><summary>Does ATLAS cost anything?</summary><p>No. With free local models (Ollama) it costs $0. You can optionally add paid API keys (Claude, GPT, Gemini). If you do, a spending cap (default $1/day) blocks calls before they happen.</p></details>
+  <details><summary>Why does my Mac / Windows warn me when I open it?</summary><p>ATLAS isn't signed with a paid Apple or Microsoft certificate yet. On Mac: System Settings → Privacy &amp; Security → Open Anyway. On Windows: More info → Run anyway. You do this once. You can verify your download with the SHA-256 on each card.</p></details>
+  <details><summary>Does the Market Lab trade real money?</summary><p>No. It's a research simulation with virtual money and is never connected to a broker. It shows out-of-sample results so you can see when strategies are just memorising noise. Not investment advice.</p></details>
+  <details><summary>Where is my data stored?</summary><p>On your computer only: <code>~/Library/Application Support/ATLAS</code> on Mac, <code>%APPDATA%\ATLAS</code> on Windows. System Health has one-click backup and restore.</p></details>
+  <details><summary>What do I need?</summary><p>Mac: macOS 11+ (Apple Silicon or Intel); first launch sets up Python automatically. Windows: 10 or 11, 64-bit; Python is included. 8 GB RAM minimum, 16 GB recommended for local AI models.</p></details>
+  <details><summary>Something broke. How do I get help?</summary><p>Open System Health inside ATLAS, run diagnostics and press “Copy debug report”. It contains everything needed to fix the problem.</p></details>
+</div></section>
+
+<section style="padding-top:20px"><div class="wrap"><div class="final reveal">
+  <h2>Start building with AI.<br><span class="grad" style="background:linear-gradient(95deg,var(--cyan),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent">Free, on your computer.</span></h2>
+  <p class="sub" style="margin:0 auto 30px">Download ATLAS and build your first AI in under five minutes.</p>
+  <a class="btn primary" href="#download"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>Download ATLAS</a>
+</div></div></section>
+
+<footer><div class="wrap"><span>ATLAS · built by Mason Ngo</span><span id="footVer"></span></div></footer>
+
+<script>
+const OSI = {
+  mac: '<svg viewBox="0 0 24 24" fill="#e8eefa"><path d="M16.4 12.6c0-2.6 2.1-3.8 2.2-3.9-1.2-1.8-3.1-2-3.7-2-1.6-.2-3.1.9-3.9.9-.8 0-2-.9-3.4-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8s2 .8 3.4.8 2.2-1.3 3.1-2.5c1-1.4 1.4-2.8 1.4-2.9 0 0-2.7-1-2.7-4.1zM13.9 4.9c.7-.9 1.2-2 1-3.2-1 0-2.3.7-3 1.6-.7.8-1.2 2-1.1 3.1 1.2.1 2.3-.6 3.1-1.5z"/></svg>',
+  windows: '<svg viewBox="0 0 24 24" fill="#3ee0ff"><path d="M3 5.5l7.4-1v7H3zM11.4 4.3L21 3v8.5h-9.6zM3 12.5h7.4v7L3 18.5zM11.4 12.5H21V21l-9.6-1.3z"/></svg>',
+  source: '<svg viewBox="0 0 24 24" fill="none" stroke="#a27bff" stroke-width="2" stroke-linecap="round"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M13 4l-2 16"/></svg>',
+};
+const NAMES = { mac: "macOS", windows: "Windows", source: "Source code" };
+const REQ = { mac: "macOS 11+ · Apple Silicon or Intel<br>Sets up Python on first launch", windows: "Windows 10 / 11 · 64-bit<br>Python included, nothing to install", source: "Python 3.9+ and numpy<br>Any OS · <code>python3 run.py</code>" };
+const STEPS = {
+  mac: ['<b>Unzip</b> ATLAS-mac.zip and drag <b>ATLAS</b> into Applications.', '<b>Open it.</b> macOS blocks unsigned apps the first time: System Settings → Privacy &amp; Security → <b>Open Anyway</b>.', '<b>Wait about a minute</b> on first launch while ATLAS sets up its Python environment. If asked to install developer tools, click Install, then reopen ATLAS.', '<b>Follow the setup wizard.</b> It walks you through free AI models.'],
+  windows: ['<b>Right-click</b> ATLAS-windows.zip → <b>Extract All</b>. Keep the whole folder together.', '<b>Double-click ATLAS.exe.</b> If SmartScreen appears: More info → <b>Run anyway</b>.', 'ATLAS opens in its own window (Edge app mode). Python is bundled.', 'Tip: right-click ATLAS.exe → Send to → Desktop to make a shortcut.'],
+  source: ['<b>Unzip</b> ATLAS-source.zip.', 'Install numpy: <code>python3 -m pip install numpy pillow pypdf</code>', 'Run <code>python3 run.py</code>. It opens at <code>localhost:8600</code>.', 'Run the tests: <code>python3 tests/test_api.py</code>'],
+};
+const FEATS = [
+  ["M12 2l2.2 6.8L21 11l-6.8 2.2L12 20l-2.2-6.8L3 11l6.8-2.2z", "AI Architect", "Describe an AI in plain English. It researches, designs, trains several real networks, tests them against a baseline and packages the winner."],
+  ["M7 2c0 6 10 6 10 12s-10 6-10 8M17 2c0 6-10 6-10 12M9 6h6M8 11h8M9 17h6", "Evolutionary Market Lab", "500 trading bots with random strategy DNA evolve on real 2007–today prices. Click any creature to see its DNA and family tree."],
+  ["M9 2h6v5H9zM2 17h6v5H2zM16 17h6v5h-6zM12 7v5M5 17v-5h14v5", "AI Workforce", "A Director hands work to team leads, who create specialist agents on probation. Agents earn trust by passing tests."],
+  ["M12 2l8.5 5v10L12 22l-8.5-5V7z", "AI Council", "Several models answer, critique each other anonymously and vote. Votes are weighted by each model's measured accuracy."],
+  ["M4 5h16v11H9l-5 4z", "Ask ATLAS", "Chat grounded in your notes and live web pages, with numbered sources you can click."],
+  ["M9 2h6M10 2v6L4 20h16L14 8V2M7 14h10", "Research Lab", "Controlled experiments across random seeds tell you whether a difference is real or noise. Every run is reproducible."],
+  ["M2 12h4l3-8 4 16 3-8h6", "Neural nets from scratch", "Design a network layer by layer and watch its decision boundary form. Pure numpy, checked against numerical gradients."],
+  ["M12 3a9 9 0 100 18 9 9 0 000-18zM12 7v5l3 2", "Automations", "Refresh market data every morning, research a topic daily, re-evolve strategies weekly. Logged and budget-safe."],
+  ["M15 9a3 2 0 00-6 0c0 3 6 1 6 4a3 2 0 01-6 0M12 6v12", "Free and safe", "Runs on free local models. Hard spending caps, permission switches, two-step deletes, backups and self-tests."],
+];
+const GAL = [
+  ["architect", "AI Architect", "The Creation Cockpit while the Architect builds a spam detector: every design decision, training run and test is logged live. It only deploys if it beats a naive baseline."],
+  ["market", "Market Lab", "500 bots evolving on real AAPL history. Colour is species, height is fitness, size is capital. The amber line is out-of-sample performance, the number that actually matters."],
+  ["workforce", "AI Workforce", "The organisation, the delegation tree and the agents' conversation are three live views of the same real activity."],
+  ["groundup", "Ground-Up AI", "A neural network trained from scratch, with live loss curves and its decision boundary replayed epoch by epoch."],
+  ["health", "System Health", "12 self-tests check ATLAS's own math and data, plus an error log, a copyable debug report and backup/restore."],
+  ["command", "Command Center", "One place for agents, AI systems, models, spending, the Market Lab and every live event."],
+];
+const fmtMB = (b) => b > 1e6 ? (b / 1e6).toFixed(1) + " MB" : Math.round(b / 1e3) + " KB";
+function detectOS() {
+  const u = navigator.userAgent + " " + (navigator.platform || "");
+  if (/iPhone|iPad|iPod|Android/i.test(u) || (/Macintosh/.test(u) && navigator.maxTouchPoints > 1)) return null;  // phones/tablets: no desktop app
+  return /Win/i.test(u) ? "windows" : /Mac/i.test(u) ? "mac" : null;
+}
+function toast(t) { const d = document.createElement("div"); d.className = "toast"; d.textContent = t; document.body.append(d); setTimeout(() => d.remove(), 2200); }
+
+async function init() {
+  let v;
+  try { v = await (await fetch("version.json", { cache: "no-store" })).json(); } catch { v = null; }
+  if (!v) { document.getElementById("dlGrid").innerHTML = '<div class="card">Could not load version.json</div>'; return; }
+  const os = detectOS();
+  document.getElementById("verTxt").textContent = "v" + v.version;
+  document.getElementById("relTitle").textContent = `v${v.version} · ${new Date(v.date + "T12:00").toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })}`;
+  document.getElementById("footVer").textContent = `v${v.version} · released ${v.date}`;
+  document.getElementById("notes").innerHTML = v.notes.map((n) => `<li>${n}</li>`).join("");
+  if (!os && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1)) {
+    document.getElementById("heroMeta").innerHTML = `v${v.version} · ATLAS is a desktop app. Open this page on your Mac or PC to download.`;
+    document.getElementById("heroDl").querySelector("span").textContent = "See downloads";
+  }
+  if (os) {
+    const d = v.downloads[os]; const hb = document.getElementById("heroDl");
+    hb.href = d.file; hb.setAttribute("download", ""); hb.querySelector("span").textContent = `Download for ${NAMES[os]}`;
+    document.getElementById("heroMeta").innerHTML = `v${v.version} · ${fmtMB(d.bytes)} · Free · No API keys · <a href="#download" style="text-decoration:underline">Other platforms</a>`;
+  }
+  const order = ["mac", "windows", "source"].sort((a, b) => (b === os) - (a === os));
+  document.getElementById("dlGrid").innerHTML = order.map((k) => { const d = v.downloads[k]; return `
+    <div class="card dl reveal ${k === os ? "rec" : ""}">${k === os ? '<span class="rectag">RECOMMENDED FOR YOU</span>' : ""}
+      <div class="os">${OSI[k]}<div><h3>${NAMES[k]}</h3><div style="font-size:13px;color:var(--faint)">v${v.version} · ${fmtMB(d.bytes)}</div></div></div>
+      <div class="spec">${REQ[k]}</div>
+      <div class="hash" data-h="${d.sha256}" title="Click to copy SHA-256"><span>SHA-256 ${d.sha256}</span></div>
+      <a class="btn ${k === os || (!os && k === "mac") ? "primary" : ""}" href="${d.file}" download>Download ${k === "source" ? "source" : "for " + NAMES[k]}</a>
+    </div>`; }).join("");
+  document.querySelectorAll(".hash").forEach((el) => el.onclick = () => { navigator.clipboard?.writeText(el.dataset.h); toast("SHA-256 copied"); });
+  const total = Object.values(v.downloads).reduce((a, d) => a + d.bytes, 0);
+  document.getElementById("stats").innerHTML = [["v" + v.version, "Current version"], ["$0", "To run with local AI"], ["15", "Departments"], ["12", "Built-in self-tests"]]
+    .map(([a, b]) => `<div class="stat"><div class="v">${a}</div><div class="l">${b}</div></div>`).join("");
+  const tabs = document.getElementById("osTabs");
+  const show = (k) => { tabs.querySelectorAll("button").forEach((b) => b.classList.toggle("on", b.dataset.os === k));
+    document.getElementById("steps").innerHTML = `<ol class="steps">${STEPS[k].map((s) => `<li>${s}</li>`).join("")}</ol>` +
+      (k !== "source" ? `<div class="warn">ATLAS is free and unsigned, so ${k === "mac" ? "macOS" : "Windows"} shows a one-time warning. Check the SHA-256 on the card above if you want to verify your download.</div>` : ""); };
+  tabs.querySelectorAll("button").forEach((b) => b.onclick = () => show(b.dataset.os));
+  show(os || "mac");
+  observe();
+}
+
+const gt = document.getElementById("galTabs");
+gt.innerHTML = GAL.map(([k, t], i) => `<button data-i="${i}" class="${i ? "" : "on"}">${t}</button>`).join("");
+function gal(i) { const [k, t, c] = GAL[i]; const img = document.getElementById("galImg"); img.style.opacity = 0;
+  setTimeout(() => { img.src = `assets/${k}.webp`; img.alt = t; img.onload = () => (img.style.opacity = 1); }, 180);
+  document.getElementById("galTitle").textContent = "ATLAS · " + t; document.getElementById("galCap").textContent = c;
+  gt.querySelectorAll("button").forEach((b) => b.classList.toggle("on", +b.dataset.i === i)); }
+gt.querySelectorAll("button").forEach((b) => b.onclick = () => gal(+b.dataset.i));
+gal(0);
+
+function observe() { const io = new IntersectionObserver((es) => es.forEach((e) => e.isIntersecting && e.target.classList.add("in")), { threshold: .12 });
+  document.querySelectorAll(".reveal:not(.in)").forEach((el) => io.observe(el)); }
+observe();
+init();
+
+
+// ---------- marquee
+const MQ = ["AI ARCHITECT", "AI COUNCIL", "AGENT WORKFORCE", "MARKET LAB", "NEURAL NETS FROM SCRATCH", "RESEARCH LAB", "KNOWLEDGE UNIVERSE", "WEB RESEARCH", "AUTOMATIONS", "PEER REVIEW", "HALL OF FAME", "SYSTEM HEALTH"];
+document.getElementById("marq").innerHTML = [...MQ, ...MQ].map((t) => `<span><b>◆</b>${t}</span>`).join("");
+
+// ---------- bento spotlight follows the mouse
+document.querySelectorAll(".tile").forEach((t) => t.addEventListener("pointermove", (e) => {
+  const r = t.getBoundingClientRect(); t.style.setProperty("--mx", e.clientX - r.left + "px"); t.style.setProperty("--my", e.clientY - r.top + "px");
+}));
+
+const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+function fit(c) { const d = devicePixelRatio || 1, w = c.clientWidth, h = c.clientHeight; if (c.width !== w * d) { c.width = w * d; c.height = h * d; } const x = c.getContext("2d"); x.setTransform(d, 0, 0, d, 0, 0); return [x, w, h]; }
+function onScreen(el) { const r = el.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight; }
+
+// ---------- AI core: rotating point sphere with orbiting agents
+(() => {
+  const c = document.getElementById("core"); const N = 520; const pts = [];
+  for (let i = 0; i < N; i++) { const y = 1 - (i / (N - 1)) * 2, r = Math.sqrt(1 - y * y), t = i * 2.39996; pts.push([Math.cos(t) * r, y, Math.sin(t) * r]); }
+  const orbits = [{ r: 1.35, tilt: .5, sp: .6, col: "#3ee0ff" }, { r: 1.55, tilt: -.9, sp: -.42, col: "#a27bff" }, { r: 1.25, tilt: 1.3, sp: .8, col: "#ff6bd5" }, { r: 1.7, tilt: .15, sp: .3, col: "#3ddc97" }];
+  let a = 0, mx = 0, my = 0;
+  c.addEventListener("pointermove", (e) => { const r = c.getBoundingClientRect(); mx = (e.clientX - r.left) / r.width - .5; my = (e.clientY - r.top) / r.height - .5; });
+  function frame(t) {
+    if (onScreen(c)) {
+      const [x, W, H] = fit(c); const cx = W / 2, cy = H / 2, R = Math.min(W, H) * .3;
+      x.clearRect(0, 0, W, H);
+      const g = x.createRadialGradient(cx, cy, R * .1, cx, cy, R * 1.6); g.addColorStop(0, "rgba(62,224,255,.28)"); g.addColorStop(.5, "rgba(91,109,255,.08)"); g.addColorStop(1, "transparent");
+      x.fillStyle = g; x.beginPath(); x.arc(cx, cy, R * 1.6, 0, 7); x.fill();
+      a += RM ? 0 : .0035; const ay = a + mx * .8, ax = .35 + my * .6;
+      const ca = Math.cos(ay), sa = Math.sin(ay), cb = Math.cos(ax), sb = Math.sin(ax);
+      const proj = pts.map(([px, py, pz]) => { let X = px * ca + pz * sa, Z = -px * sa + pz * ca; let Y = py * cb - Z * sb; Z = py * sb + Z * cb; return [cx + X * R, cy + Y * R, Z]; });
+      // network lines on the front hemisphere
+      x.lineWidth = .6;
+      for (let i = 0; i < N; i += 3) { const p = proj[i], q = proj[(i * 7 + 13) % N]; if (p[2] > .2 && q[2] > .2 && Math.hypot(p[0] - q[0], p[1] - q[1]) < R * .55) { x.strokeStyle = `rgba(62,224,255,${.09 * p[2]})`; x.beginPath(); x.moveTo(p[0], p[1]); x.lineTo(q[0], q[1]); x.stroke(); } }
+      for (const [X, Y, Z] of proj) { const s = (Z + 1.4) / 2.4; x.fillStyle = Z > 0 ? `rgba(160,235,255,${.25 + .7 * s})` : `rgba(162,123,255,${.12 * s + .05})`; x.beginPath(); x.arc(X, Y, .7 + 1.6 * s * s, 0, 7); x.fill(); }
+      // orbits with travelling agents
+      for (const o of orbits) {
+        x.strokeStyle = o.col + "33"; x.lineWidth = 1; x.beginPath();
+        for (let k = 0; k <= 64; k++) { const th = k / 64 * Math.PI * 2; const ox = Math.cos(th) * o.r, oz = Math.sin(th) * o.r; const oy = oz * Math.sin(o.tilt), oz2 = oz * Math.cos(o.tilt);
+          let X = ox * ca + oz2 * sa, Z = -ox * sa + oz2 * ca; let Y = oy * cb - Z * sb; k ? x.lineTo(cx + X * R, cy + Y * R) : x.moveTo(cx + X * R, cy + Y * R); }
+        x.stroke();
+        for (let j = 0; j < 2; j++) {
+          const th = t / 1000 * o.sp + j * Math.PI; const ox = Math.cos(th) * o.r, oz = Math.sin(th) * o.r; const oy = oz * Math.sin(o.tilt), oz2 = oz * Math.cos(o.tilt);
+          let X = ox * ca + oz2 * sa, Z = -ox * sa + oz2 * ca; let Y = oy * cb - Z * sb; Z = oy * sb + Z * cb;
+          x.shadowColor = o.col; x.shadowBlur = 18; x.fillStyle = o.col; x.beginPath(); x.arc(cx + X * R, cy + Y * R, 3 + Z, 0, 7); x.fill(); x.shadowBlur = 0;
+        }
+      }
+      const cg = x.createRadialGradient(cx, cy, 0, cx, cy, R * .35); cg.addColorStop(0, "rgba(255,255,255,.9)"); cg.addColorStop(.25, "rgba(62,224,255,.5)"); cg.addColorStop(1, "transparent");
+      x.fillStyle = cg; x.beginPath(); x.arc(cx, cy, R * .35, 0, 7); x.fill();
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+
+// ---------- market mini world: species drift upward as they evolve
+(() => {
+  const c = document.getElementById("mktviz"); if (!c) return;
+  const COLS = ["#3ee0ff", "#5b8cff", "#a27bff", "#ff6bd5", "#ffbe3d"];
+  const B = Array.from({ length: 140 }, () => ({ s: Math.floor(Math.random() * 5), y: Math.random(), f: Math.random(), ph: Math.random() * 7, r: 1.5 + Math.random() * 3.5 }));
+  let gen = 0, last = 0;
+  function frame(t) {
+    if (onScreen(c)) {
+      const [x, W, H] = fit(c); x.clearRect(0, 0, W, H);
+      if (t - last > 1400 && !RM) { last = t; gen++;
+        if (gen % 9 === 0) B.forEach((b) => (b.f = Math.random() * .7));  // market crash: the environment changes, fitness resets
+        B.sort((a, b) => b.f - a.f); for (let i = 70; i < B.length; i++) { const p = B[Math.floor(Math.random() * 30)]; Object.assign(B[i], { s: p.s, f: Math.min(1, p.f * (.9 + Math.random() * .2)), y: 1.1, r: p.r }); } }
+      const zw = W / 5;
+      COLS.forEach((col, i) => { x.fillStyle = col + "0d"; x.fillRect(i * zw, 0, zw - 2, H); });
+      for (const b of B) { b.y += ((1 - b.f) - b.y) * .04; const px = b.s * zw + zw * (.15 + ((b.ph * 97) % 1) * .7), py = 12 + b.y * (H - 24) + Math.sin(t / 500 + b.ph) * 2;
+        x.fillStyle = COLS[b.s]; x.shadowColor = COLS[b.s]; x.shadowBlur = 6; x.beginPath(); x.ellipse(px, py, b.r * 1.25, b.r, 0, 0, 7); x.fill(); }
+      x.shadowBlur = 0; x.fillStyle = "#93a0bb"; x.font = "11px ui-monospace,monospace"; x.fillText("gen " + gen + " · ↑ fitter" + (gen % 9 < 2 && gen > 8 ? "  · CRASH" : ""), 8, 14);
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+
+// ---------- lab: training curves replaying (train vs validation)
+(() => {
+  const c = document.getElementById("labviz"); if (!c) return; let k = 0;
+  function frame() {
+    if (onScreen(c)) {
+      const [x, W, H] = fit(c); x.clearRect(0, 0, W, H); k = RM ? 200 : (k + .6) % 260; const n = Math.min(200, Math.floor(k));
+      x.strokeStyle = "rgba(120,150,220,.12)"; for (let i = 1; i < 4; i++) { x.beginPath(); x.moveTo(0, H * i / 4); x.lineTo(W, H * i / 4); x.stroke(); }
+      const line = (fn, col) => { x.strokeStyle = col; x.lineWidth = 2; x.beginPath(); for (let i = 0; i <= n; i++) { const X = i / 200 * W, Y = 12 + (1 - fn(i)) * (H - 26); i ? x.lineTo(X, Y) : x.moveTo(X, Y); } x.stroke(); };
+      line((i) => Math.exp(-i / 35) * .9 + .04, "#ff6bd5"); line((i) => Math.exp(-i / 45) * .85 + .1 + Math.max(0, i - 130) / 900, "#3ee0ff");
+      x.fillStyle = "#93a0bb"; x.font = "11px ui-monospace,monospace"; x.fillText("loss · epoch " + n, 8, 14);
+      if (n > 135) { x.fillStyle = "#ffbe3d"; x.fillText("validation rising → overfitting", W - 210, 14); }
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

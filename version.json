@@ -1,0 +1,30 @@
+{
+ "version": "0.3.0",
+ "date": "2026-11-18",
+ "notes": [
+  "Redesigned interface: glass sidebar, gradient cards, sharper typography",
+  "Getting-started checklist on the home screen that tracks your progress",
+  "In-app update notifications from this download page",
+  "Mac and Windows desktop apps (Windows includes Python)",
+  "Ask ATLAS chat with knowledge and live web sources",
+  "Automations, web research, peer review, Market Lab Hall of Fame",
+  "One-click free AI models, setup wizard, Cmd+K palette, System Health"
+ ],
+ "downloads": {
+  "mac": {
+   "file": "downloads/ATLAS-mac.zip",
+   "bytes": 614050,
+   "sha256": "9b4224174e09d76438ed20de3904a10478a833226cb76715ad75a2a855cb2ac9"
+  },
+  "windows": {
+   "file": "downloads/ATLAS-windows.zip",
+   "bytes": 31866031,
+   "sha256": "fb4ff6779fedd58fab155f69ea3d1414d4278b8cc1538567e81e2b6947a54801"
+  },
+  "source": {
+   "file": "downloads/ATLAS-source.zip",
+   "bytes": 845579,
+   "sha256": "fb82f2613b958e60799fef59b9ec3f0bfb437966a4f8b4b4bea17d344dd2a3c7"
+  }
+ }
+}
